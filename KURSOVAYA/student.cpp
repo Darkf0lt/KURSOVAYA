@@ -17,12 +17,13 @@ bool CheckName(string _name)
     }
     return true;
 }
+
 void student::PrintInfo()
 {
     cout << fio.surename << " " << fio.name << " " << fio.lastname << " " <<
         dateofbirth.day << "." << dateofbirth.month << "." << dateofbirth.year << " " <<
-        fac << " " << kaf << " " << group << " " << ID << " " << gender<<endl;
-    for (int i = 0; i < sessionsq; i++)
+        fac << " " << kaf << " " << group << " " << ID << " " << gender<<" " << endl;
+   for (int i = 0; i < sessionsq; i++)
     {
         cout << "Сессия " << i+1 << ": "<< endl;
         for (int j = 0; j < sessions[i].disq; j++)
@@ -151,31 +152,39 @@ void student::WriteDown()
 {
     ofstream file;
     file.open("db.bin", ios::app | ios::binary);
-    file.write((char*)this,sizeof(this));
-    //file.write((char*)&fio.surename, sizeof(fio.surename));
-    //file.write((char*)&fio.name, sizeof(fio.name));
-    //file.write((char*)&fio.lastname, sizeof(fio.lastname));
-    //file.write((char*)&dateofbirth.day, sizeof(dateofbirth.day));
-    //file.write((char*)&dateofbirth.month, sizeof(dateofbirth.month));
-    //file.write((char*)&dateofbirth.year, sizeof(dateofbirth.year));
-    //file.write((char*)&fac, sizeof(fac));
-    //file.write((char*)&kaf, sizeof(kaf));
-    //file.write((char*)&group, sizeof(group));
-    //file.write((char*)&ID, sizeof(ID));
-    //file.write((char*)&gender, sizeof(gender));
-    //file.write((char*)&sessionsq, sizeof(sessionsq));
-    //for (int i = 0; i < sessionsq; i++)
-    //{
-    //    file << " " << sessions[i].disq << " ";
-    //    for (int j = 0; j < sessions[i].disq; j++)
-    //    {
-    //        file.write((char*)&sessions[i].alldisc[j].name,sizeof(sessions[i].alldisc[j].name)); 
-    //        file.write((char*)&sessions[i].alldisc[j].mark, sizeof(sessions[i].alldisc[j].mark));
-    //    }
-    //}
+    file.write((char*)this, sizeof(student));
+    file.write((char*)sessions, sizeof(sessions));
+    for (int i = 0; i < sessionsq; i++)
+    {
+        file.write((char*)&sessions[i].disq, sizeof(int));
+        for (int j = 0; j < sessions[i].disq; j++)
+        {
+            file.write((char*)&sessions[i].alldisc[j].name, sizeof(sessions[i].alldisc[j].name));
+            file.write((char*)&sessions[i].alldisc[j].mark, sizeof(sessions[i].alldisc[j].mark));
+        }
+    }
     file.close();
 }
 
 
-
+void student::ExtractFile()
+{
+    ifstream file;
+    file.open("db.bin", ios::binary | ios::in);
+    file.read((char*)this, sizeof(student));
+    sessions = (session*) new session[sessionsq];
+    file.read((char*)sessions, sizeof(sessions));
+    for (int i = 0; i < sessionsq; i++)
+    {
+        file.read((char*)&sessions[i].disq, sizeof(int));
+        sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[sessions[i].disq];
+    
+       for (int j = 0; j < sessions[i].disq; j++)
+        {
+            file.read((char*)&sessions[i].alldisc[j].name, sizeof(sessions[i].alldisc[j].name));
+            file.read((char*)&sessions[i].alldisc[j].mark, sizeof(sessions[i].alldisc[j].mark));
+        }
+    }
+    file.close();
+}
 

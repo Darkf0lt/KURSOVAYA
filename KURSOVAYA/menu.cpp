@@ -2,26 +2,6 @@
 #include <fstream>
 using namespace std;
 
-student menu::GetInfo(ifstream &file)
-{	
-	student st;
-	{
-		file >> st.fio.surename >> st.fio.name >> st.fio.lastname >> st.dateofbirth.day
-			>> st.dateofbirth.month >> st.dateofbirth.year >> st.fac >> st.kaf >> st.group >> st.ID >> st.gender >> st.sessionsq;
-		st.sessions = (session*) new session[st.sessionsq];
-		for (int i = 0; i < st.sessionsq; i++)
-		{
-			file >> st.sessions[i].disq;
-			st.sessions[i].alldisc = (disciplineinfo*)new disciplineinfo[st.sessions[i].disq];
-			for (int j = 0; j < st.sessions[i].disq; j++)
-			{
-				file >> st.sessions[i].alldisc[j].name >> st.sessions[i].alldisc[j].mark;
-			}
-		}
-	}
-	return st;
-}
-
 void menu::StartMenu()
 {	
 	int flag = 1;
@@ -70,20 +50,12 @@ void menu::FirstOption()
 
 void menu::SecondOption()
 {
-	student tmpst;
-	char ID[8];
+	/*char ID[8];
 	cout << "Введите индивидуальный номер студента: ";
-	cin >> ID;
-	ifstream file;
-	int flag = 0;
-	file.open("db.bin", ios::in && ios::binary);
-	while (!flag)
-	{
-		if (file.eof()) break;
-		tmpst = GetInfo(file);
-		if (!(strcmp(ID, tmpst.ID))) { flag = 1; tmpst.PrintInfo(); break; }
-	}
-	if (!flag) { cout << "Такого студента не существует" << endl; }
-	file.close();
+	cin >> ID;*/
+	student tmpst;
+	tmpst.ExtractFile();
+	tmpst.PrintInfo();
 }
-//Жемерикин Максим Алексеевич 22 10 2004 ИБ КБ-1 БАСО-04-22 0829 М 1 1 ЯП 5 Линт Артём Дмитриевич 22 10 2004 Иб КБ-1 БАСО-04-22 0830 М 1 1 ЯП 5 Серик Иван Никитич 2 12 2004 РТ РТ РТ-5-21 22к071 М 1 1 ЯП 5  
+	
+// Серик Иван Никитич 2 12 2004 РТ РТ РТ-5-21 22к071 М 1 1 ЯП 5  

@@ -8,7 +8,7 @@
 using namespace std;
 #include <windows.h> 
 int main()
-{   
+{
     menu Menu;
     system("chcp 1251");
     system("cls");

@@ -30,7 +30,7 @@ public:
     void GetInfo();
     void PrintInfo();
     void WriteDown();
-    //void ExtractFile();
+    void ExtractFile();
 };
 
 
