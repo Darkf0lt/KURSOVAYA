@@ -5,10 +5,11 @@
 using namespace std;
 class menu
 {
-	
-	student GetInfo(ifstream &file);
 	void FirstOption();
 	void SecondOption();
+	void ThirdOption();
+	void FourthOption();
+	void FifthOption();
 public:
 	void StartMenu();
 	

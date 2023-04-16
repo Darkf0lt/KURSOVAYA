@@ -1,6 +1,7 @@
 #pragma once
 #include "session.h"
-
+#include <string>
+#include <string.h>
 struct FIO
 {
     char name[20];
@@ -29,8 +30,11 @@ public:
     session* sessions;
     void GetInfo();
     void PrintInfo();
+    void PrintSessions();
     void WriteDown();
+    void WriteDownBuf();
     void ExtractFile();
+    void ChangeInfo();
 };
 
 
