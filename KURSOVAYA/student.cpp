@@ -19,48 +19,42 @@ bool CheckName(string _name)
     return true;
 }
 
-void student::PrintInfo()
+void FIO::GetFIO()
 {
-    cout << fio.surename << " " << fio.name << " " << fio.lastname << " " <<
-        dateofbirth.day << "." << dateofbirth.month << "." << dateofbirth.year << " " <<yearofentery<<" "<<
-        fac << " " << kaf << " " << group << " " << ID << " " << gender<<" " << endl;
-    student::PrintSessions();
-}
-
-void student::PrintSessions()
-{
-    for (int i = 0; i < sessionsq; i++)
+    bool flag = true;
+    while (flag)
     {
-        cout << "Сессия " << i + 1 << ": " << endl;
-        for (int j = 0; j < sessions[i].disq; j++)
-        {
-            cout << "Предмет: " << sessions[i].alldisc[j].name << " Оценка: " << sessions[i].alldisc[j].mark << endl;
-        }
+        cout << "Введите фамилию студента: ";
+        cin >> surename;
+        if (CheckName(surename)) flag = false;
+    }
+
+    flag = true;
+    while (flag)
+    {
+        cout << "Введите имя студента: ";
+        cin >> name;
+        if (CheckName(name)) flag = false;
+    }
+
+    flag = true;
+    while (flag)
+    {
+        cout << "Введите отчество студента: ";
+        cin >> lastname;
+        if (CheckName(lastname)) flag = false;
     }
 }
 
-void student::GetInfo()
+void BDate::GetDate()
 {
-start:
-    sng:
-    cout << "Введите фамилию студента: ";
-    cin >> fio.surename;
-    if (!CheckName(fio.surename)) goto sng;
-ng:
-    cout << "Введите имя студента: ";
-    cin >> fio.name;
-    if (!CheckName(fio.name)) goto ng;
-lng:
-    cout << "Введите отчество студента: ";
-    cin >> fio.lastname;
-    if (!CheckName(fio.lastname)) goto lng;
     while (true)
     {
         cout << "Введите дату рождения в формате 'День Месяц Год': ";
-        cin >> dateofbirth.day >> dateofbirth.month >> dateofbirth.year;
+        cin >> day >> month >> year;
         if (!cin.fail())
         {
-            if (!(dateofbirth.month > 12 || dateofbirth.month < 1 || dateofbirth.day>31 || dateofbirth.day < 1))//УЛУЧШИТЬ
+            if (!(month > 12 || month < 1 || day>31 || day < 1))//УЛУЧШИТЬ
             {
 
                 break;
@@ -74,6 +68,10 @@ lng:
             cout << "Вы ввели некорректную информацию" << endl;
         }
     }
+}
+
+void INFO::GetINFO()
+{
     while (true)
     {
         cout << "Введите год поступления: ";
@@ -98,7 +96,6 @@ lng:
     cin >> group;
     cout << "Введите номер студенческого билета: ";
     cin >> ID;
-
     while (true)
     {
         cout << "Введите пол студента (М/Ж): ";
@@ -110,7 +107,39 @@ lng:
         }
         else cout << "Проверьте корректность введённых данных и введите их заново " << endl;
     }
+}
 
+void student::PrintInfo()
+{
+    cout << surename << " " << name << " " << lastname << " " <<
+        day << "." << month << "." << year << " " <<yearofentery<<" "<<
+        fac << " " << kaf << " " << group << " " << ID << " " << gender<<" " << endl;
+    student::PrintSessions();
+}
+
+void FIO::PrintFIO()
+{
+    cout << surename << " " << name << " " << lastname << endl;
+}
+
+void student::PrintSessions()
+{
+    for (int i = 0; i < sessionsq; i++)
+    {
+        cout << "Сессия " << i + 1 << ": " << endl;
+        for (int j = 0; j < sessions[i].disq; j++)
+        {
+            cout << "Предмет: " << sessions[i].alldisc[j].name << " Оценка: " << sessions[i].alldisc[j].mark << endl;
+        }
+    }
+}
+
+void student::GetInfo()
+{
+start:
+    this->GetFIO();
+    this->GetDate();
+    this->GetINFO();
     while (true)
     {
         cout << "Введите количество сессий: ";
@@ -131,15 +160,18 @@ lng:
     {
         sessions[i].GetDisc();
     }
-checkpoint:
-    char answer;
-    cout << "Вы ввели следующие даныые: " << endl;
-    this->PrintInfo();
-    cout << "Всё ли верно?(Y/N): ";
-    cin >> answer;
-    switch (answer)
+    bool flag = true;
+    while (flag)
     {
+        char answer;
+        cout << "Вы ввели следующие даныые: " << endl;
+        this->PrintInfo();
+        cout << "Всё ли верно?(Y/N): ";
+        cin >> answer;
+        switch (answer)
+        {
         case 'Y':
+            flag = false;
             break;
         case 'N':
             cout << "Пожалуйста, введите данные заново" << endl;
@@ -147,9 +179,9 @@ checkpoint:
             system("cls");
             goto start;
         default:
-            cout << "Введён неверный ответ"<<endl;
+            cout << "Введён неверный ответ" << endl;
             system("cls");
-            goto checkpoint;
+        }
     }
     system("cls");
 }
@@ -172,10 +204,10 @@ void student::WriteDown()
     file.close();
 }
 
-void student::WriteDownBuf()
+void student::WriteDown(const char _filename[])
 {
     ofstream file;
-    file.open("buf.bin",  ios::app | ios::binary);
+    file.open(_filename, ios::app | ios::binary);
     file.write((char*)this, sizeof(student));
     file.write((char*)sessions, sizeof(sessions));
     for (int i = 0; i < sessionsq; i++)
@@ -190,10 +222,8 @@ void student::WriteDownBuf()
     file.close();
 }
 
-void student::ExtractFile()
+void student::ExtractFile(ifstream &file)
 {
-    ifstream file;
-    file.open("db.bin", ios::binary | ios::in);
     file.read((char*)this, sizeof(student));
     sessions = (session*) new session[sessionsq];
     file.read((char*)sessions, sizeof(sessions));
@@ -208,17 +238,17 @@ void student::ExtractFile()
             file.read((char*)&sessions[i].alldisc[j].mark, sizeof(sessions[i].alldisc[j].mark));
         }
     }
-    file.close();
 }
 
-void student::ChangeInfo()//ЗДЕСЬ ПОМЕНЯТЬ ВВОД КАК В GETINFO~!!!!!
+void student::ChangeInfo()
 {
-    while (true)
+    bool flag = true;
+    while (flag)
     {
         int input;
         cout << "Какое поле вы желаете изменить? " << endl;
-        cout << "1. ФИО: " << fio.surename << " " << fio.name << " " << fio.lastname << endl;
-        cout << "2. Дата рождения: " << dateofbirth.day << "." << dateofbirth.month << "." << dateofbirth.year << endl;
+        cout << "1. ФИО: " << surename << " " << name << " " << lastname << endl;
+        cout << "2. Дата рождения: " << day << "." << month << "." << year << endl;
         cout << "3. Факультет: " << fac << endl;
         cout << "4. Кафедра: " << kaf << endl;
         cout << "5. Группа: " << group << endl;
@@ -232,43 +262,9 @@ void student::ChangeInfo()//ЗДЕСЬ ПОМЕНЯТЬ ВВОД КАК В GETINFO~!!!!!
         switch (input)
         {
         case 1:
-        sng:
-            cout << "Введите фамилию студента: ";
-            cin >> fio.surename;
-            if (!CheckName(fio.surename)) goto sng;
-        ng:
-            cout << "Введите имя студента: ";
-            cin >> fio.name;
-            if (!CheckName(fio.name)) goto ng;
-        lng:
-            cout << "Введите отчество студента: ";
-            cin >> fio.lastname;
-            if (!CheckName(fio.lastname)) goto lng;
-            system("cls");
-            break;
+            this->GetFIO();
         case 2:
-            while (true)
-            {
-                cout << "Введите дату рождения в формате 'День Месяц Год': ";
-                cin >> dateofbirth.day >> dateofbirth.month >> dateofbirth.year;
-                if (!cin.fail())
-                {
-                    if (!(dateofbirth.month > 12 || dateofbirth.month < 1 || dateofbirth.day>31 || dateofbirth.day < 1))//УЛУЧШИТЬ
-                    {
-
-                        break;
-                    }
-                    cout << "Проверьте корректность введённых данных и введите их заново " << endl;
-                }
-                else
-                {
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "Вы ввели некорректную информацию" << endl;
-                }
-            }
-            system("cls");
-            break;
+            this->GetDate();
         case 3:
             cout << "Введите факультет студента: ";
             cin >> fac;
@@ -327,10 +323,118 @@ void student::ChangeInfo()//ЗДЕСЬ ПОМЕНЯТЬ ВВОД КАК В GETINFO~!!!!!
             system("cls");
             break;
         case 9:
-            goto finish;
+            flag = false;
             break;
         }
     }
-finish:
     system("cls");
+}
+
+bool student::Check()
+{
+    if (!strcmp(name, "NULL")) return false;
+    else return true;
+}
+
+int student::PrintAll(const char _filename[])
+{
+    student tmpst;
+    ifstream file;
+    file.open(_filename, ios::binary | ios::in);
+    while (file.read((char*)&tmpst, sizeof(student)))
+    {
+        tmpst.sessions = (session*) new session[tmpst.sessionsq];
+        file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
+        for (int i = 0; i < tmpst.sessionsq; i++)
+        {
+            file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
+            tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
+
+            for (int j = 0; j < tmpst.sessions[i].disq; j++)
+            {
+                file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
+                file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
+            }
+        }
+        cout << "|----------------------------------------------------------------------------------------------|" << endl;
+        tmpst.PrintInfo();
+    }
+    cout << "|----------------------------------------------------------------------------------------------|" << endl;
+    system("pause");
+    system("cls");
+    return 1;
+}
+
+student student::FindStudent(char ID[8], const char _filename[])
+{
+    ifstream file;
+    file.open(_filename, ios::binary);
+    student tmpst,res;
+    while (file.read((char*)&tmpst, sizeof(student)))
+    {
+        tmpst.sessions = (session*) new session[tmpst.sessionsq];
+        file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
+        for (int i = 0; i < tmpst.sessionsq; i++)
+        {
+            file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
+            tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
+
+            for (int j = 0; j < tmpst.sessions[i].disq; j++)
+            {
+                file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
+                file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
+            }
+        }
+        if (!(strcmp(tmpst.ID, ID)))
+        {
+            res = tmpst;
+        }
+        else tmpst.WriteDown("buf.bin");
+    }
+    return res;
+}
+
+int student::CopyFile(const char _file1[], const char _file2[])
+{
+    ifstream file;
+    student tmpst;
+    ofstream copy;
+    copy.open(_file2, ios::trunc | ios::out);
+    copy.close();
+    file.open(_file1, ios::binary);
+    while (file.read((char*)&tmpst, sizeof(student)))
+    {
+        tmpst.sessions = (session*) new session[tmpst.sessionsq];
+        file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
+        for (int i = 0; i < tmpst.sessionsq; i++)
+        {
+            file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
+            tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
+
+            for (int j = 0; j < tmpst.sessions[i].disq; j++)
+            {
+                file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
+                file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
+            }
+        }
+        tmpst.WriteDown(_file2);
+    }
+    return 1;
+}
+
+int* student::GetMarks()
+{
+    int count = 0;
+    for (int i = 0; i < sessionsq;i++)
+    {
+        for (int j = 0; j < sessions[i].disq; j++) count++;
+    }
+    int* mkarr;
+    mkarr = (int*) new int[count];
+    mkarr[0] = 0;
+    for (int i = 0; i < sessionsq ; i++)
+    {
+        for (int j = 0; j < sessions[i].disq && count > 0; j++, count--) mkarr[count] = sessions[i].alldisc[j].mark;
+    }
+    return mkarr;
 }

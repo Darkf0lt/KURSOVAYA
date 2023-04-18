@@ -10,8 +10,8 @@ class menu
 	void ThirdOption();
 	void FourthOption();
 	void FifthOption();
+	void SixthOption();
 public:
 	void StartMenu();
-	
 };
 

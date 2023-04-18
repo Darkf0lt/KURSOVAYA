@@ -129,11 +129,13 @@
   <ItemGroup>
     <ClCompile Include="KURSOVAYA.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="session.cpp" />
     <ClCompile Include="student.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="menu.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="session.h" />
     <ClInclude Include="student.h" />
   </ItemGroup>

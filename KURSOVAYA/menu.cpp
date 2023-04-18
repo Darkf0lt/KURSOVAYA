@@ -1,5 +1,7 @@
 #include "menu.h"
 #include <fstream>
+#include "student.h"
+#include "Node.h"
 using namespace std;
 
 void menu::StartMenu()
@@ -47,6 +49,9 @@ void menu::StartMenu()
 		case 5:
 			menu::FifthOption();
 			break;
+		case 6:
+			menu::SixthOption();
+			break;
 		case 7: flag = 0; system("cls"); cout << "Завершение работы"; break;
 		}
 	}
@@ -66,204 +71,105 @@ void menu::SecondOption()
 	cin >> ID;
 	student tmpst;
 	ifstream file;
-	bool flag = false;
-	file.open("db.bin", ios::binary | ios::in);
-	while (file.read((char*)&tmpst, sizeof(student)))
-	{
-		tmpst.sessions = (session*) new session[tmpst.sessionsq];
-		file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
-		for (int i = 0; i < tmpst.sessionsq; i++)
-		{
-			file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
-			tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
-
-			for (int j = 0; j < tmpst.sessions[i].disq; j++)
-			{
-				file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
-				file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
-			}
-		}
-		if (!(strcmp(tmpst.ID, ID)))
-		{
-			tmpst.PrintInfo();
-			flag = true;
-		}
-	}
-	if (!flag)
-	{
-		cout << "Такого студента нет в базе " << endl;
-	}
+	tmpst = student::FindStudent(ID,"db.bin");
+	if (tmpst.Check()) { tmpst.PrintInfo(); }
+	else cout << "Такого студента нет в базе " << endl;
 	system("pause");
 	system("cls");
 }
 
 void menu::ThirdOption()
 {
-	student tmpst;
-	ifstream file;
-	file.open("db.bin", ios::binary | ios::in);
-	while (file.read((char*)&tmpst, sizeof(student)))
-	{
-		tmpst.sessions = (session*) new session[tmpst.sessionsq];
-		file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
-		for (int i = 0; i < tmpst.sessionsq; i++)
-		{
-			file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
-			tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
-
-			for (int j = 0; j < tmpst.sessions[i].disq; j++)
-			{
-				file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
-				file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
-			}
-		}
-		cout << "|----------------------------------------------------------------------------------------------|" << endl;
-		tmpst.PrintInfo();
-	}
-	cout << "|----------------------------------------------------------------------------------------------|" << endl;
-	system("pause");
-	system("cls");
+	student::PrintAll("db.bin");
 }
 
 void menu::FourthOption()
 {
-	ifstream file;
 	ofstream copy;
 	copy.open("buf.bin", ios::trunc | ios::out);
 	copy.close();
 	char ID[8];
 	cout << "Введите индивидуальный номер студента: ";
 	cin >> ID;
-	file.open("db.bin", ios::binary);
 	student tmpst;
-	bool flag = false;
-	while (file.read((char*)&tmpst, sizeof(student)))
+	tmpst = student::FindStudent(ID, "db.bin");
+	if (tmpst.Check()) 
 	{
-		tmpst.sessions = (session*) new session[tmpst.sessionsq];
-		file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
-		for (int i = 0; i < tmpst.sessionsq; i++)
-		{
-			file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
-			tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
-
-			for (int j = 0; j < tmpst.sessions[i].disq; j++)
-			{
-				file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
-				file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
-			}
-		}
-		if (!(strcmp(tmpst.ID, ID)))
-		{
-			tmpst.ChangeInfo();
-			flag = true;
-		}
-		tmpst.WriteDownBuf();
+		tmpst.ChangeInfo();
+		copy.open("db.bin", ios::trunc);
+		copy.close();
+		tmpst.WriteDown("buf.bin");
 	}
-	if (!flag)
-	{
-		cout << "Такого студента нет в базе " << endl;
-	}
+	else{cout << "Такого студента нет в базе " << endl; system("pause");}
+	student::CopyFile("buf.bin", "db.bin");
 	system("cls");
-	file.close();
-	copy.open("db.bin", ios::trunc);
-	file.close();
-	file.open("buf.bin", ios::binary);
-	while (file.read((char*)&tmpst, sizeof(student)))
-	{
-		tmpst.sessions = (session*) new session[tmpst.sessionsq];
-		file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
-		for (int i = 0; i < tmpst.sessionsq; i++)
-		{
-			file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
-			tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
-
-			for (int j = 0; j < tmpst.sessions[i].disq; j++)
-			{
-				file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
-				file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
-			}
-		}
-		tmpst.WriteDown();
-	}
-	copy.open("buf.bin", ios::trunc | ios::out);
-	copy.close();
 }
 
 void menu::FifthOption()
 {
-	ifstream file;
 	ofstream copy;
 	char ID[8];
 	copy.open("buf.bin", ios::trunc | ios::out);
 	copy.close();
 	cout << "Введите индивидуальный номер студента: ";
 	cin >> ID;
-	file.open("db.bin", ios::binary);
 	student tmpst;
-	bool flag = false;
-	while (file.read((char*)&tmpst, sizeof(student)))
+	tmpst = student::FindStudent(ID, "db.bin");
+	if (tmpst.Check())
 	{
-		tmpst.sessions = (session*) new session[tmpst.sessionsq];
-		file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
-		for (int i = 0; i < tmpst.sessionsq; i++)
+		char answer;
+		cout << "Удалить студента(Y/N)?" << endl;
+		tmpst.PrintFIO();
+		cin >> answer;
+		switch (answer)
 		{
-			file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
-			tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
-
-			for (int j = 0; j < tmpst.sessions[i].disq; j++)
-			{
-				file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
-				file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
-			}
-		}
-		if (!(strcmp(tmpst.ID, ID)))
-		{
-			flag = true;
-			char answer;
-			cout << "Удалить студента '" << tmpst.fio.surename << " " << tmpst.fio.name << " " << tmpst.fio.lastname << "'(Y/N)?" << endl;
-			cin >> answer;
-			switch (answer)
-			{
-			case 'Y':
-				break;
-			case 'N':
-				goto end;
-			}
-		}
-		if ((strcmp(tmpst.ID, ID)))tmpst.WriteDownBuf();
-
-		if (!flag)
-		{
-			cout << "Такого студента нет в базе " << endl;
-			system("pause");
+		case 'Y':
+			student::CopyFile("buf.bin","db.bin");
+			system("cls");
+			break;
+		case 'N':
+			system("cls");
+			break;
 		}
 	}
-
-		system("cls");
-		file.close();
-		copy.open("db.bin", ios::trunc|ios::out);
-		file.close();
-		file.open("buf.bin", ios::binary);
-		while (file.read((char*)&tmpst, sizeof(student)))
-		{
-			tmpst.sessions = (session*) new session[tmpst.sessionsq];
-			file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
-			for (int i = 0; i < tmpst.sessionsq; i++)
-			{
-				file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
-				tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
-
-				for (int j = 0; j < tmpst.sessions[i].disq; j++)
-				{
-					file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
-					file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
-				}
-			}
-			tmpst.WriteDown();
-		}
-	end:
-		copy.open("buf.bin", ios::trunc|ios::out);
-		copy.close();
+	else { cout << "Такого студента нет в базе " << endl; system("pause"); system("cls"); }
 }
 
+void menu::SixthOption()
+{
+	system("cls");
+	List StudentList;
+	ifstream file, costyl;
+	student tmpst;
+	int option;
+	int* tmparr;
+	cout << "По каким параметрам требуется вывести студента:" << endl;
+	cout << "1. За все время обучения нет ни одной оценки 3" << endl;
+	cout << "2. За все время обучения нет ни одной оценки 3 и 4" << endl;
+	cout << "3. За все время обучения нет ни одной оценки 5" << endl;
+	cout << "Ваш выбор: ";
+	cin >> option;
+	file.open("db.bin", ios::binary);
+	costyl.open("db.bin", ios::binary);
+	switch (option)
+	{
+	case 1:
+		{
+			while (costyl.read((char*)&tmpst, sizeof(student)))
+			{
+				tmpst.ExtractFile(file);
+				tmparr = tmpst.GetMarks();
+				
+			}
+		}
+	}
+}
+//Вариант 29. Распечатать всех студентов, у которых за все время
+//обучения нет ни одной оценки
+//а) 3;
+//б) 3 и 4;
+//в) 5.
+//Предусмотреть распечатывать лиц определенного пола.Варианты а) – в)
+//выбираются по желанию пользователя.
+// 
 // Серик Иван Никитич 2 12 2004 РТ РТ РТ-5-21 22к071 М 1 1 ЯП 5  

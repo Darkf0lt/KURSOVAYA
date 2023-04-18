@@ -2,39 +2,69 @@
 #include "session.h"
 #include <string>
 #include <string.h>
-struct FIO
+using namespace std;
+class FIO
 {
+protected:
     char name[20];
     char surename[20];
     char lastname[20];
+    FIO()
+    {
+        strcpy_s(name, "NULL"); strcpy_s(surename, "NULL"); strcpy_s(lastname, "NULL");
+    }
+    void GetFIO();
+public:
+    void PrintFIO();
 };
-struct Date
+
+class BDate
 {
+protected:
     int day;
     int month;
     int year;
+    BDate()
+    {
+        day = 0; month = 0; year = 0;
+    }
+    void GetDate();
 };
 
-class student
+class INFO
 {
-public:
-    FIO fio;
-    Date dateofbirth;
+protected:
     int yearofentery;
     char fac[20];
     char kaf[20];
     char group[11];
     char ID[8];
     char gender;
+    INFO()
+    {
+        yearofentery = 0; strcpy_s(fac, "NULL"); strcpy_s(kaf, "NULL"); strcpy_s(group, "NULL"); strcpy_s(ID, "NULL"); gender = 'N';
+    }
+    void GetINFO();
+
+};
+
+class student :public FIO, protected BDate, protected INFO
+{
     int sessionsq;
     session* sessions;
+public:
     void GetInfo();
     void PrintInfo();
     void PrintSessions();
     void WriteDown();
-    void WriteDownBuf();
-    void ExtractFile();
+    void WriteDown(const char _filename[]);
+    void ExtractFile(ifstream &file);
     void ChangeInfo();
+    bool Check();
+    static int PrintAll(const char _filename[]);
+    static student FindStudent(char ID[8], const char _filename[]);
+    static int CopyFile(const char _file1[], const char _file2[]);
+    int* GetMarks();
 };
 
 

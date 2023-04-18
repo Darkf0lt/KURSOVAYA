@@ -5,12 +5,16 @@
 #include "student.h"
 #include "session.h"
 #include "menu.h"
-using namespace std;
 #include <windows.h> 
+using namespace std;
+
+
+
 int main()
 {
-    menu Menu;
+
     system("chcp 1251");
     system("cls");
+    menu Menu;
     Menu.StartMenu();
 }
