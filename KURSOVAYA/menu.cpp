@@ -135,11 +135,20 @@ void menu::FifthOption()
 	else { cout << "Такого студента нет в базе " << endl; system("pause"); system("cls"); }
 }
 
+bool LookForArr(int k, int* arr,int start)
+{
+	for (int i = start; i < sizeof(arr); i++)
+	{
+		if (k == arr[i]) return true;
+	}
+	return false;
+}
+
 void menu::SixthOption()
 {
 	system("cls");
 	List StudentList;
-	ifstream file, costyl;
+	ifstream file;
 	student tmpst;
 	int option;
 	int* tmparr;
@@ -150,20 +159,61 @@ void menu::SixthOption()
 	cout << "Ваш выбор: ";
 	cin >> option;
 	file.open("db.bin", ios::binary);
-	costyl.open("db.bin", ios::binary);
 	switch (option)
 	{
 	case 1:
+	{
+		while (tmpst.ExtractFile(file))
+			{
+				tmparr = (int*) new int[tmpst.GetMarks()[0]];
+				tmparr = tmpst.GetMarks();
+				if (!LookForArr(3, tmparr,1))
+				{
+					StudentList.Add(tmpst);
+				}
+			}
+			StudentList.Print();
+			system("pause");
+			system("cls");
+			break;
+	}
+
+	case 2:
 		{
-			while (costyl.read((char*)&tmpst, sizeof(student)))
+			while (tmpst.ExtractFile(file))
+			{
+				tmparr = tmpst.GetMarks();
+				if (!LookForArr(4, tmparr,1) && !LookForArr(3, tmparr,1))
+				{
+					StudentList.Add(tmpst);
+				}
+			}
+			StudentList.Print();
+			system("pause");
+			system("cls");
+			break;
+		}
+	case 3: 
+		{
+			while (tmpst.ExtractFile(file))
 			{
 				tmpst.ExtractFile(file);
 				tmparr = tmpst.GetMarks();
-				
+				if (!LookForArr(5, tmparr,1))
+				{
+					StudentList.Add(tmpst);
+				}
 			}
-		}
+			StudentList.Print();
+			system("pause");
+			system("cls");
+			break;
+			}
 	}
+	StudentList.Clear();
 }
+
+
 //Вариант 29. Распечатать всех студентов, у которых за все время
 //обучения нет ни одной оценки
 //а) 3;

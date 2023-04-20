@@ -1,5 +1,4 @@
 #pragma once
-#include "session.h"
 #include <string>
 #include <string.h>
 using namespace std;
@@ -48,6 +47,20 @@ protected:
 
 };
 
+struct disciplineinfo
+{
+    char name[20];
+    int mark;
+};
+
+class session
+{
+public:
+    int disq;//disciplines quantity
+    disciplineinfo* alldisc;
+    void GetDisc();
+};
+
 class student :public FIO, protected BDate, protected INFO
 {
     int sessionsq;
@@ -58,7 +71,7 @@ public:
     void PrintSessions();
     void WriteDown();
     void WriteDown(const char _filename[]);
-    void ExtractFile(ifstream &file);
+    bool ExtractFile(ifstream &file);
     void ChangeInfo();
     bool Check();
     static int PrintAll(const char _filename[]);
@@ -66,5 +79,3 @@ public:
     static int CopyFile(const char _file1[], const char _file2[]);
     int* GetMarks();
 };
-
-

@@ -21,9 +21,6 @@
     <ClCompile Include="student.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="session.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="menu.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -33,9 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="student.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="session.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="menu.h">
