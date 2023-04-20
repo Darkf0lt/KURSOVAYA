@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
+#include "session.h"
 #include <string.h>
 using namespace std;
 
@@ -121,55 +122,6 @@ void FIO::PrintFIO()
     cout << surename << " " << name << " " << lastname << endl;
 }
 
-void session::GetDisc()
-{
-    while (true)
-    {
-        cout << "Введите кол-во пердметов: ";
-        cin >> disq;
-        if (!cin.fail())
-        {
-            if (!(disq < 1 || disq>10))
-            {
-
-                break;
-            }
-            cout << "Проверьте корректность введённых данных и введите их заново " << endl;
-        }
-        else
-        {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Вы ввели некорректную информацию" << endl;
-        }
-    }
-    alldisc = (disciplineinfo*)new disciplineinfo[disq];
-    for (int i = 0; i < disq; i++)
-    {
-        cout << "Введите название " << i + 1 << " дисциплины: ";
-        cin >> alldisc[i].name;
-        while (true)
-        {
-            cout << "Введите оценку: ";
-            cin >> alldisc[i].mark;
-            if (!cin.fail())
-            {
-                if (!(alldisc[i].mark > 5 || alldisc[i].mark < 1))
-                {
-                    break;
-                }
-                cout << "Проверьте корректность введённых данных и введите их заново " << endl;
-            }
-            else
-            {
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                cout << "Вы ввели некорректную информацию" << endl;
-            }
-        }
-    }
-}
-
 void student::PrintSessions()
 {
     for (int i = 0; i < sessionsq; i++)
@@ -184,59 +136,54 @@ void student::PrintSessions()
 
 void student::GetInfo()
 {
-//start:
-    bool flag1 = true;
-    while (flag1)
+start:
+    this->GetFIO();
+    this->GetDate();
+    this->GetINFO();
+    while (true)
     {
-        this->GetFIO();
-        this->GetDate();
-        this->GetINFO();
-        while (true)
+        cout << "Введите количество сессий: ";
+        cin >> sessionsq;
+        if (!cin.fail())
         {
-            cout << "Введите количество сессий: ";
-            cin >> sessionsq;
-            if (!cin.fail())
-            {
 
-                break;
-            }
-            else
-            {
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                cout << "Вы ввели некорректную информацию" << endl;
-            }
+            break;
         }
-        sessions = (session*) new session[sessionsq];
-        for (int i = 0; i < sessionsq; i++)
+        else
         {
-            sessions[i].GetDisc();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Вы ввели некорректную информацию" << endl;
         }
-        bool flag = true;
-        while (flag)
-        {
-            char answer;
-            cout << "Вы ввели следующие даныые: " << endl;
-            this->PrintInfo();
-            cout << "Всё ли верно?(Y/N): ";
-            cin >> answer;
-            switch (answer)
-            {
-            case 'Y':
-                flag = false;
-                flag1 = false;
-                break;
-            case 'N':
-                cout << "Пожалуйста, введите данные заново" << endl;
-                system("pause");
-                system("cls");
-                //goto start;
-            default:
-                cout << "Введён неверный ответ" << endl;
-                system("cls");
-            }
-        }
-        system("cls");
     }
+    sessions = (session*) new session[sessionsq];
+    for (int i = 0; i < sessionsq; i++)
+    {
+        sessions[i].GetDisc();
+    }
+    bool flag = true;
+    while (flag)
+    {
+        char answer;
+        cout << "Вы ввели следующие даныые: " << endl;
+        this->PrintInfo();
+        cout << "Всё ли верно?(Y/N): ";
+        cin >> answer;
+        switch (answer)
+        {
+        case 'Y':
+            flag = false;
+            break;
+        case 'N':
+            cout << "Пожалуйста, введите данные заново" << endl;
+            system("pause");
+            system("cls");
+            goto start;
+        default:
+            cout << "Введён неверный ответ" << endl;
+            system("cls");
+        }
+    }
+    system("cls");
 }
 
 void student::WriteDown()
@@ -275,26 +222,22 @@ void student::WriteDown(const char _filename[])
     file.close();
 }
 
-bool student::ExtractFile(ifstream &file)
+void student::ExtractFile(ifstream &file)
 {
-    if (file.read((char*)this, sizeof(student)))
+    file.read((char*)this, sizeof(student));
+    sessions = (session*) new session[sessionsq];
+    file.read((char*)sessions, sizeof(sessions));
+    for (int i = 0; i < sessionsq; i++)
     {
-        sessions = (session*) new session[sessionsq];
-        file.read((char*)sessions, sizeof(sessions));
-        for (int i = 0; i < sessionsq; i++)
+        file.read((char*)&sessions[i].disq, sizeof(int));
+        sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[sessions[i].disq];
+    
+       for (int j = 0; j < sessions[i].disq; j++)
         {
-            file.read((char*)&sessions[i].disq, sizeof(int));
-            sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[sessions[i].disq];
-
-            for (int j = 0; j < sessions[i].disq; j++)
-            {
-                file.read((char*)&sessions[i].alldisc[j].name, sizeof(sessions[i].alldisc[j].name));
-                file.read((char*)&sessions[i].alldisc[j].mark, sizeof(sessions[i].alldisc[j].mark));
-            }
+            file.read((char*)&sessions[i].alldisc[j].name, sizeof(sessions[i].alldisc[j].name));
+            file.read((char*)&sessions[i].alldisc[j].mark, sizeof(sessions[i].alldisc[j].mark));
         }
-        return true;
     }
-    else return false;
 }
 
 void student::ChangeInfo()
@@ -320,12 +263,8 @@ void student::ChangeInfo()
         {
         case 1:
             this->GetFIO();
-            system("cls");
-            break;
         case 2:
             this->GetDate();
-            system("cls");
-            break;
         case 3:
             cout << "Введите факультет студента: ";
             cin >> fac;
@@ -402,13 +341,7 @@ int student::PrintAll(const char _filename[])
     student tmpst;
     ifstream file;
     file.open(_filename, ios::binary | ios::in);
-    while (tmpst.ExtractFile(file)) 
-    {
-        cout << "|----------------------------------------------------------------------------------------------|" << endl;
-        tmpst.PrintInfo();
-    }
-    cout << "|----------------------------------------------------------------------------------------------|" << endl;
-    /*while (file.read((char*)&tmpst, sizeof(student)))
+    while (file.read((char*)&tmpst, sizeof(student)))
     {
         tmpst.sessions = (session*) new session[tmpst.sessionsq];
         file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
@@ -426,7 +359,7 @@ int student::PrintAll(const char _filename[])
         cout << "|----------------------------------------------------------------------------------------------|" << endl;
         tmpst.PrintInfo();
     }
-    cout << "|----------------------------------------------------------------------------------------------|" << endl;*/
+    cout << "|----------------------------------------------------------------------------------------------|" << endl;
     system("pause");
     system("cls");
     return 1;
@@ -436,9 +369,22 @@ student student::FindStudent(char ID[8], const char _filename[])
 {
     ifstream file;
     file.open(_filename, ios::binary);
-    student tmpst, res;
-    while (tmpst.ExtractFile(file))
+    student tmpst,res;
+    while (file.read((char*)&tmpst, sizeof(student)))
     {
+        tmpst.sessions = (session*) new session[tmpst.sessionsq];
+        file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
+        for (int i = 0; i < tmpst.sessionsq; i++)
+        {
+            file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
+            tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
+
+            for (int j = 0; j < tmpst.sessions[i].disq; j++)
+            {
+                file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
+                file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
+            }
+        }
         if (!(strcmp(tmpst.ID, ID)))
         {
             res = tmpst;
@@ -456,8 +402,21 @@ int student::CopyFile(const char _file1[], const char _file2[])
     copy.open(_file2, ios::trunc | ios::out);
     copy.close();
     file.open(_file1, ios::binary);
-    while (tmpst.ExtractFile(file))
+    while (file.read((char*)&tmpst, sizeof(student)))
     {
+        tmpst.sessions = (session*) new session[tmpst.sessionsq];
+        file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
+        for (int i = 0; i < tmpst.sessionsq; i++)
+        {
+            file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
+            tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
+
+            for (int j = 0; j < tmpst.sessions[i].disq; j++)
+            {
+                file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
+                file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
+            }
+        }
         tmpst.WriteDown(_file2);
     }
     return 1;
@@ -472,7 +431,7 @@ int* student::GetMarks()
     }
     int* mkarr;
     mkarr = (int*) new int[count];
-    mkarr[0] = count;
+    mkarr[0] = 0;
     for (int i = 0; i < sessionsq ; i++)
     {
         for (int j = 0; j < sessions[i].disq && count > 0; j++, count--) mkarr[count] = sessions[i].alldisc[j].mark;

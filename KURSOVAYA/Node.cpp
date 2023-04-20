@@ -1,8 +1,7 @@
 #include "Node.h"
 
-Node* List::Add(student st)
+Node* List::Add(student st, Node* node = NULL)
 {
-    Node* node = NULL;
     Node* elem = new Node();
     elem->field = st;
     count++;
@@ -23,6 +22,21 @@ Node* List::Add(student st)
     return elem;
 }
 
+Node* List::Delete(Node* node)
+{
+    if (node == NULL) { return NULL; } // ¬ списке нет узлов
+    count--;
+    if (node == head)  // ”даление корневого узла
+    {
+        head = node->ptr;
+        delete node;
+        return head;
+    }
+    Node* prev = Prev(node); // ”даление промежуточного узла
+    prev->ptr = node->ptr;
+    delete node;
+    return prev;
+}
 
 Node* List::Next(Node* node)
 {
@@ -40,6 +54,13 @@ Node* List::Prev(Node* node)
     return p;
 }
 
+Node* List::getLast()
+{
+    Node* p = head;
+    while (Next(p) != NULL)
+        p = Next(p);
+    return p;
+}
 
 void List::Clear()
 {
@@ -62,8 +83,43 @@ void List::Print()
     {
         student tmpst = getValue(p);
         tmpst.PrintInfo();
-        cout << "|-----------------------------------------------------------------------------|"<<endl;
         p = Next(p);
     } ;
     cout << endl;
+}
+
+void List::Swap(Node* node1, Node* node2)
+{
+    if (node1 == NULL || node2 == NULL) return; // не допускаем обмен с несуществующим узлом
+    if (node1 == node2) return; // если один узел указан дважды, мен€ть ничего не надо
+    if (node2->ptr == node1) // если node2 находитс€ перед node1, мен€ем их местами
+    {
+        Node* p = node1;
+        node1 = node2;
+        node2 = p;
+    }
+    Node* prev1 = Prev(node1);
+    Node* prev2 = Prev(node2);
+    Node* next1 = Next(node1);
+    Node* next2 = Next(node2);
+    if (next1 == node2) // обмен соседних узлов
+    {
+        if (prev1 != NULL)
+            prev1->ptr = node2;
+        else
+            head = node2;
+        node2->ptr = node1;
+        node1->ptr = next2;
+        return;
+    }
+    if (prev1 != NULL)  // обмен отсто€щих узлов
+        prev1->ptr = node2;
+    else
+        head = node2;
+    if (prev2 != NULL)
+        prev2->ptr = node1;
+    else
+        head = node1;
+    node2->ptr = next1;
+    node1->ptr = next2;
 }
