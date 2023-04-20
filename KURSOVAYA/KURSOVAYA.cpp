@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <fstream>
 #include "student.h"
-#include "session.h"
 #include "menu.h"
 #include <windows.h> 
 using namespace std;
@@ -12,9 +11,8 @@ using namespace std;
 
 int main()
 {
-
     system("chcp 1251");
     system("cls");
     menu Menu;
-    Menu.StartMenu();
+    Menu.StartMenu(); 
 }
