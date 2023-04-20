@@ -60,8 +60,7 @@ void menu::StartMenu()
 void menu::FirstOption()
 {
 	student currentstudent;
-	currentstudent.GetInfo();
-	currentstudent.WriteDown();
+	if(currentstudent.GetInfo()) currentstudent.WriteDown();
 }
 
 void menu::SecondOption()

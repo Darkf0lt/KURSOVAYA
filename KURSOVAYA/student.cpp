@@ -182,7 +182,7 @@ void student::PrintSessions()
     }
 }
 
-void student::GetInfo()
+bool student::GetInfo()
 {
     bool flag1 = true;
     while (flag1)
@@ -216,7 +216,7 @@ void student::GetInfo()
             char answer;
             cout << "Вы ввели следующие даныые: " << endl;
             this->PrintInfo();
-            cout << "Всё ли верно?(Y/N): ";
+            cout << "Всё ли верно?(Y/N/E(exit)): ";
             cin >> answer;
             switch (answer)
             {
@@ -227,9 +227,14 @@ void student::GetInfo()
             case 'N':
                 cout << "Пожалуйста, введите данные заново" << endl;
                 flag = false;
-                flag1 = false;
                 system("pause");
                 system("cls");
+                break;
+            case 'E':
+                flag = false;
+                flag1 = false;
+                system("cls");
+                return false;
                 break;
             default:
                 cout << "Введён неверный ответ" << endl;
@@ -238,6 +243,7 @@ void student::GetInfo()
             }
         }
         system("cls");
+        return true;
     }
 }
 
@@ -410,6 +416,7 @@ int student::PrintAll(const char _filename[])
         tmpst.PrintInfo();
     }
     cout << "|----------------------------------------------------------------------------------------------|" << endl;
+    system("pause");
     system("cls");
     return 1;
 }

@@ -66,7 +66,7 @@ class student :public FIO, protected BDate, protected INFO
     int sessionsq;
     session* sessions;
 public:
-    void GetInfo();
+    bool GetInfo();
     void PrintInfo();
     void PrintSessions();
     void WriteDown();
