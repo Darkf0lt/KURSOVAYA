@@ -184,7 +184,6 @@ void student::PrintSessions()
 
 void student::GetInfo()
 {
-//start:
     bool flag1 = true;
     while (flag1)
     {
@@ -227,12 +226,15 @@ void student::GetInfo()
                 break;
             case 'N':
                 cout << "Пожалуйста, введите данные заново" << endl;
+                flag = false;
+                flag1 = false;
                 system("pause");
                 system("cls");
-                //goto start;
+                break;
             default:
                 cout << "Введён неверный ответ" << endl;
                 system("cls");
+                break;
             }
         }
         system("cls");
@@ -408,26 +410,6 @@ int student::PrintAll(const char _filename[])
         tmpst.PrintInfo();
     }
     cout << "|----------------------------------------------------------------------------------------------|" << endl;
-    /*while (file.read((char*)&tmpst, sizeof(student)))
-    {
-        tmpst.sessions = (session*) new session[tmpst.sessionsq];
-        file.read((char*)tmpst.sessions, sizeof(tmpst.sessions));
-        for (int i = 0; i < tmpst.sessionsq; i++)
-        {
-            file.read((char*)&tmpst.sessions[i].disq, sizeof(int));
-            tmpst.sessions[i].alldisc = (disciplineinfo*) new disciplineinfo[tmpst.sessions[i].disq];
-
-            for (int j = 0; j < tmpst.sessions[i].disq; j++)
-            {
-                file.read((char*)&tmpst.sessions[i].alldisc[j].name, sizeof(tmpst.sessions[i].alldisc[j].name));
-                file.read((char*)&tmpst.sessions[i].alldisc[j].mark, sizeof(tmpst.sessions[i].alldisc[j].mark));
-            }
-        }
-        cout << "|----------------------------------------------------------------------------------------------|" << endl;
-        tmpst.PrintInfo();
-    }
-    cout << "|----------------------------------------------------------------------------------------------|" << endl;*/
-    system("pause");
     system("cls");
     return 1;
 }
