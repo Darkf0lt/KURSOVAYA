@@ -201,6 +201,7 @@ bool student::GetInfo()
             }
             else
             {
+                cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << "Вы ввели некорректную информацию" << endl;
             }
