@@ -93,8 +93,17 @@ void INFO::GetINFO()
     cin >> kaf;
     cout << "Введите группу студента: ";
     cin >> group;
-    cout << "Введите номер студенческого билета: ";
-    cin >> ID;
+    while (true)
+    {
+        cout << "Введите номер студенческого билета: ";
+        cin >> ID;
+   
+        if (!strcmp(ID, student::FindStudent(ID, "db.bin").ReturnID())) 
+        
+            cout << "Ошибка ввода: студент с таким номером уже существует" << endl;
+            
+        else break;
+    }
     while (true)
     {
         cout << "Введите пол студента (М/Ж): ";
@@ -351,8 +360,17 @@ void student::ChangeInfo()
             system("cls");
             break;
         case 6:
-            cout << "Введите номер студенческого билета: ";
-            cin >> ID;
+            while (true)
+            {
+                cout << "Введите номер студенческого билета: ";
+                cin >> ID;
+
+                if (!strcmp(ID, student::FindStudent(ID, "db.bin").ReturnID()))
+
+                    cout << "Ошибка ввода: студент с таким номером уже существует" << endl;
+
+                else break;
+            }
             system("cls");
             break;
         case 7:

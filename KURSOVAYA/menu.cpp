@@ -70,8 +70,8 @@ void menu::StartMenu()
 
 void menu::FirstOption()
 {
-	student currentstudent;
-	if(currentstudent.GetInfo()) currentstudent.WriteDown();
+	student currentstudent, cmp;
+	if(currentstudent.GetInfo())  currentstudent.WriteDown();
 }
 
 void menu::SecondOption()
@@ -224,12 +224,4 @@ void menu::SixthOption()
 }
 
 
-//Вариант 29. Распечатать всех студентов, у которых за все время
-//обучения нет ни одной оценки
-//а) 3;
-//б) 3 и 4;
-//в) 5.
-//Предусмотреть распечатывать лиц определенного пола.Варианты а) – в)
-//выбираются по желанию пользователя.
-// 
 // Серик Иван Никитич 2 12 2004 РТ РТ РТ-5-21 22к071 М 1 1 ЯП 5  

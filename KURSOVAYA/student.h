@@ -44,7 +44,11 @@ protected:
         yearofentery = 0; strcpy_s(fac, "NULL"); strcpy_s(kaf, "NULL"); strcpy_s(group, "NULL"); strcpy_s(ID, "NULL"); gender = 'N';
     }
     void GetINFO();
-
+public:
+    char* ReturnID()
+    {
+        return ID;
+    }
 };
 
 struct disciplineinfo
@@ -61,7 +65,7 @@ public:
     void GetDisc();
 };
 
-class student :public FIO, protected BDate, protected INFO
+class student :public FIO, protected BDate, public INFO
 {
     int sessionsq;
     session* sessions;
