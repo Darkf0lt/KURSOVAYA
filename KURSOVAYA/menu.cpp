@@ -67,7 +67,7 @@ void menu::StartMenu()
 		case 6:
 			menu::SixthOption();
 			break;
-		case 7: flag = 0;  cout << "Завершение работы" << endl; system("pause"); system("cls"); break;
+		case 7: flag = 0;  cout << "Завершение работы" << endl; system("cls"); break;
 		}
 	}
 	Crypt();
