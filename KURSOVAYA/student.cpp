@@ -97,11 +97,13 @@ void INFO::GetINFO()
     {
         cout << "¬ведите номер студенческого билета: ";
         cin >> ID;
-   
-        if (!strcmp(ID, student::FindStudent(ID, "db.bin").ReturnID())) 
-        
+        student tmp;
+        ifstream file;
+        file.open("db.bin", ios::binary);
+        if (tmp.ExtractFile(file) && !strcmp(ID, student::FindStudent(ID, "db.bin").ReturnID()))
+
             cout << "ќшибка ввода: студент с таким номером уже существует" << endl;
-            
+
         else break;
     }
     while (true)
@@ -120,8 +122,8 @@ void INFO::GetINFO()
 void student::PrintInfo()
 {
     cout << surename << " " << name << " " << lastname << " " <<
-        day << "." << month << "." << year << " " <<yearofentery<<" "<<
-        fac << " " << kaf << " " << group << " " << ID << " " << gender<<" " << endl;
+        day << "." << month << "." << year << " " << yearofentery << " " <<
+        fac << " " << kaf << " " << group << " " << ID << " " << gender << " " << endl;
     student::PrintSessions();
 }
 
@@ -293,7 +295,7 @@ void student::WriteDown(const char _filename[])
     file.close();
 }
 
-bool student::ExtractFile(ifstream &file)
+bool student::ExtractFile(ifstream& file)
 {
     if (file.read((char*)this, sizeof(student)))
     {
@@ -429,7 +431,7 @@ int student::PrintAll(const char _filename[])
     student tmpst;
     ifstream file;
     file.open(_filename, ios::binary | ios::in);
-    while (tmpst.ExtractFile(file)) 
+    while (tmpst.ExtractFile(file))
     {
         cout << "|----------------------------------------------------------------------------------------------|" << endl;
         tmpst.PrintInfo();
@@ -474,14 +476,14 @@ int student::CopyFile(const char _file1[], const char _file2[])
 int* student::GetMarks()
 {
     int count = 0;
-    for (int i = 0; i < sessionsq;i++)
+    for (int i = 0; i < sessionsq; i++)
     {
         for (int j = 0; j < sessions[i].disq; j++) count++;
     }
     int* mkarr;
     mkarr = (int*) new int[count];
     mkarr[0] = count;
-    for (int i = 0; i < sessionsq ; i++)
+    for (int i = 0; i < sessionsq; i++)
     {
         for (int j = 0; j < sessions[i].disq && count > 0; j++, count--) mkarr[count] = sessions[i].alldisc[j].mark;
     }

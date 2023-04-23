@@ -1,11 +1,15 @@
 #include "menu.h"
 #include <fstream>
+#include <stdio.h>
 #include "student.h"
 #include "Node.h"
+#include "CRYPT.h"
 using namespace std;
 
 void menu::StartMenu()
-{	
+{
+	Decrypt();
+	system("cls");
 	int flag = 1;
 	while (flag)
 	{
@@ -34,11 +38,11 @@ void menu::StartMenu()
 				if (input < 8 && input>0) { system("cls"); break; }
 				else { system("cls"); cout << "Введено неверное значение " << endl; }
 			}
-			else 
+			else
 			{
 				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-				cout << "Введено неверное значение " << endl; 
+				cin.ignore(INT_MAX, '\n');
+				cout << "Введено неверное значение " << endl;
 				system("pause");
 				system("cls");
 			}
@@ -63,15 +67,18 @@ void menu::StartMenu()
 		case 6:
 			menu::SixthOption();
 			break;
-		case 7: flag = 0; system("cls"); cout << "Завершение работы"; break;
+		case 7: flag = 0;  cout << "Завершение работы" << endl; system("pause"); system("cls"); break;
 		}
 	}
+	Crypt();
+	remove("buf.bin");
+	system("cls");
 }
 
 void menu::FirstOption()
 {
 	student currentstudent, cmp;
-	if(currentstudent.GetInfo())  currentstudent.WriteDown();
+	if (currentstudent.GetInfo())  currentstudent.WriteDown();
 }
 
 void menu::SecondOption()
@@ -81,7 +88,7 @@ void menu::SecondOption()
 	cin >> ID;
 	student tmpst;
 	ifstream file;
-	tmpst = student::FindStudent(ID,"db.bin");
+	tmpst = student::FindStudent(ID, "db.bin");
 	if (tmpst.Check()) { tmpst.PrintInfo(); }
 	else cout << "Такого студента нет в базе " << endl;
 	system("pause");
@@ -90,7 +97,11 @@ void menu::SecondOption()
 
 void menu::ThirdOption()
 {
-	student::PrintAll("db.bin");
+	student tmp;
+	ifstream file;
+	file.open("db.bin", ios::binary);
+	if (tmp.ExtractFile(file)) student::PrintAll("db.bin");
+	file.close();
 }
 
 void menu::FourthOption()
@@ -103,14 +114,14 @@ void menu::FourthOption()
 	cin >> ID;
 	student tmpst;
 	tmpst = student::FindStudent(ID, "db.bin");
-	if (tmpst.Check()) 
+	if (tmpst.Check())
 	{
 		tmpst.ChangeInfo();
 		copy.open("db.bin", ios::trunc);
 		copy.close();
 		tmpst.WriteDown("buf.bin");
 	}
-	else{cout << "Такого студента нет в базе " << endl; system("pause");}
+	else { cout << "Такого студента нет в базе " << endl; system("pause"); }
 	student::CopyFile("buf.bin", "db.bin");
 	system("cls");
 }
@@ -134,7 +145,7 @@ void menu::FifthOption()
 		switch (answer)
 		{
 		case 'Y':
-			student::CopyFile("buf.bin","db.bin");
+			student::CopyFile("buf.bin", "db.bin");
 			system("cls");
 			break;
 		case 'N':
@@ -145,7 +156,7 @@ void menu::FifthOption()
 	else { cout << "Такого студента нет в базе " << endl; system("pause"); system("cls"); }
 }
 
-bool LookForArr(int k, int* arr,int start)
+bool LookForArr(int k, int* arr, int start)
 {
 	for (int i = start; i < sizeof(arr); i++)
 	{
@@ -174,51 +185,51 @@ void menu::SixthOption()
 	case 1:
 	{
 		while (tmpst.ExtractFile(file))
+		{
+			tmparr = (int*) new int[tmpst.GetMarks()[0]];
+			tmparr = tmpst.GetMarks();
+			if (!LookForArr(3, tmparr, 1))
 			{
-				tmparr = (int*) new int[tmpst.GetMarks()[0]];
-				tmparr = tmpst.GetMarks();
-				if (!LookForArr(3, tmparr,1))
-				{
-					StudentList.Add(tmpst);
-				}
+				StudentList.Add(tmpst);
 			}
-			StudentList.Print();
-			system("pause");
-			system("cls");
-			break;
+		}
+		StudentList.Print();
+		system("pause");
+		system("cls");
+		break;
 	}
 
 	case 2:
+	{
+		while (tmpst.ExtractFile(file))
 		{
-			while (tmpst.ExtractFile(file))
+			tmparr = tmpst.GetMarks();
+			if (!LookForArr(4, tmparr, 1) && !LookForArr(3, tmparr, 1))
 			{
-				tmparr = tmpst.GetMarks();
-				if (!LookForArr(4, tmparr,1) && !LookForArr(3, tmparr,1))
-				{
-					StudentList.Add(tmpst);
-				}
+				StudentList.Add(tmpst);
 			}
-			StudentList.Print();
-			system("pause");
-			system("cls");
-			break;
 		}
-	case 3: 
+		StudentList.Print();
+		system("pause");
+		system("cls");
+		break;
+	}
+	case 3:
+	{
+		while (tmpst.ExtractFile(file))
 		{
-			while (tmpst.ExtractFile(file))
+			tmpst.ExtractFile(file);
+			tmparr = tmpst.GetMarks();
+			if (!LookForArr(5, tmparr, 1))
 			{
-				tmpst.ExtractFile(file);
-				tmparr = tmpst.GetMarks();
-				if (!LookForArr(5, tmparr,1))
-				{
-					StudentList.Add(tmpst);
-				}
+				StudentList.Add(tmpst);
 			}
-			StudentList.Print();
-			system("pause");
-			system("cls");
-			break;
-			}
+		}
+		StudentList.Print();
+		system("pause");
+		system("cls");
+		break;
+	}
 	}
 	StudentList.Clear();
 }
