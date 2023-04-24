@@ -455,6 +455,7 @@ student student::FindStudent(char ID[8], const char _filename[])
         }
         else tmpst.WriteDown("buf.bin");
     }
+    file.close();
     return res;
 }
 
