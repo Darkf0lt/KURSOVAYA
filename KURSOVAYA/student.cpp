@@ -237,10 +237,10 @@ bool student::GetInfo()
                 flag1 = false;
                 break;
             case 'N':
-                cout << "Пожалуйста, введите данные заново" << endl;
-                flag = false;
-                system("pause");
                 system("cls");
+                this->ChangeInfo();
+                system("cls");
+                flag = false;
                 break;
             case 'E':
                 flag = false;
