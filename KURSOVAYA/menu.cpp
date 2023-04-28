@@ -233,6 +233,3 @@ void menu::SixthOption()
 	}
 	StudentList.Clear();
 }
-
-
-// Серик Иван Никитич 2 12 2004 РТ РТ РТ-5-21 22к071 М 1 1 ЯП 5  

@@ -134,6 +134,7 @@ void FIO::PrintFIO()
 
 void session::GetDisc()
 {
+    int ExC = 0, ZaC = 0;
     while (true)
     {
         cout << "Введите кол-во пердметов: ";
@@ -157,19 +158,33 @@ void session::GetDisc()
     alldisc = (disciplineinfo*)new disciplineinfo[disq];
     for (int i = 0; i < disq; i++)
     {
-        cout << "Введите название " << i + 1 << " дисциплины: ";
-        cin >> alldisc[i].name;
+        cout << "Введите название " << i + 1 << " дисциплины: " << endl; 
+        cin.get();
+        cin.getline(alldisc[i].name,30);
         while (true)
         {
-            cout << "Введите оценку: ";
+            cout << "Введите оценку(2-5/зач/незач): ";
             cin >> alldisc[i].mark;
             if (!cin.fail())
             {
-                if (!(alldisc[i].mark > 5 || alldisc[i].mark < 1))
+                if (!CheckName(alldisc[i].mark) && ExC<5)
                 {
-                    break;
+                    ExC++;
+                    if (!(stoi(alldisc[i].mark) > 5 || stoi(alldisc[i].mark) < 1))
+                    {
+                        break;
+                    }
+                    cout << "Проверьте корректность введённых данных и введите их заново (превышен лимит количества экзаменов/оценка выходит за рамки значений) " << endl;
                 }
-                cout << "Проверьте корректность введённых данных и введите их заново " << endl;
+                else
+                {   
+                    if(ZaC < 5)
+                    {
+                        ZaC++;
+                        if (!(strcmp(alldisc[i].mark, "зач")) || !(strcmp(alldisc[i].mark, "незач"))) break;
+                        cout << "Проверьте корректность введённых данных и введите их заново (превышен лимит количества зачётов/оценка не соответствует предполагаемым значениям) " << endl;
+                    }
+                }
             }
             else
             {
@@ -237,10 +252,11 @@ bool student::GetInfo()
                 flag1 = false;
                 break;
             case 'N':
+                cout << "Пожалуйста, введите данные заново" << endl;
+                system("pause");
                 system("cls");
                 this->ChangeInfo();
                 system("cls");
-                flag = false;
                 break;
             case 'E':
                 flag = false;
@@ -320,9 +336,11 @@ bool student::ExtractFile(ifstream& file)
 void student::ChangeInfo()
 {
     bool flag = true;
+    bool flag1 = true;
     while (flag)
     {
         int input;
+        system("cls");
         cout << "Какое поле вы желаете изменить? " << endl;
         cout << "1. ФИО: " << surename << " " << name << " " << lastname << endl;
         cout << "2. Дата рождения: " << day << "." << month << "." << year << endl;
@@ -339,7 +357,41 @@ void student::ChangeInfo()
         switch (input)
         {
         case 1:
-            this->GetFIO();
+            
+            while(flag1)
+            {
+                system("cls");
+                cout << "Какое поле нужно изменить: " << endl;
+                cout << "1. Фамилия: " << this->surename << endl;
+                cout << "2. Имя: " << this->name << endl;
+                cout << "3. Отчество: " << this->lastname << endl;
+                cout << "4. Выход ";
+                cin >> input;
+                switch (input)
+                    {
+                    case 1:
+                        cout << "Введите фамилию: ";
+                        cin >> this->surename;
+                        flag1 = false;
+                        break;
+                    case 2:
+                        cout << "Введите имя: ";
+                        cin >> this->name;
+                        flag1 = false;
+                        break;
+                    case 3:
+                        cout << "Введите отчество: ";
+                        cin >> this->lastname;
+                        flag1 = false;
+                        break;
+                    case 4:
+                        flag1 = false;
+                        break;
+                    default:
+                        cout << "ОШИБКА";
+                        break;
+                    }
+            }
             system("cls");
             break;
         case 2:
@@ -390,27 +442,67 @@ void student::ChangeInfo()
             system("cls");
             break;
         case 8:
-            while (true)
+            system("cls");
+            flag1 = true;
+            while(flag1)
             {
-                cout << "Введите количество сессий: ";
-                cin >> sessionsq;
-                if (!cin.fail())
+                system("cls");
+                cout << "Что требуется изменить: " << endl;
+                cout << "1. Переписать всю информацию " << endl;
+                cout << "2. Изменение инормации конкретой сессии " << endl;
+                cout << "3. Выход " << endl;
+                cin >> input;
+                switch (input)
                 {
+                case 1:
+                    while (true)
+                    {
+                        cout << "Введите количество сессий: ";
+                        cin >> sessionsq;
+                        if (!cin.fail())
+                        {
 
+                            break;
+                        }
+                        else
+                        {
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            cout << "Вы ввели некорректную информацию" << endl;
+                        }
+                    }
+                    sessions = (session*) new session[sessionsq];
+                    for (int i = 0; i < sessionsq; i++)
+                    {
+                        sessions[i].GetDisc();
+                    }
+                    flag1 = false;
+                    system("cls");
+                    break;
+                case 2:
+                    system("cls");
+                    this->PrintSessions();
+                    flag1 = true;
+                    while (flag1)
+                    {
+                        cout << "Какую сессию требуется изменить(1 - " << this->sessionsq << ")" << endl;
+                        cin >> input;
+                        input -= 1;
+                        if (input<0 || input > this->sessionsq - 1)
+                        {
+                            cout << "ОШИБКА";
+                        }
+                        else
+                        {
+                            this->sessions[input].GetDisc();
+                            flag1 = false;
+                        }
+                    }
+                    break;
+                case 3:
+                    flag1 = false;
                     break;
                 }
-                else
-                {
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "Вы ввели некорректную информацию" << endl;
-                }
             }
-            sessions = (session*) new session[sessionsq];
-            for (int i = 0; i < sessionsq; i++)
-            {
-                sessions[i].GetDisc();
-            }
-            system("cls");
             break;
         case 9:
             flag = false;
@@ -486,7 +578,12 @@ int* student::GetMarks()
     mkarr[0] = count;
     for (int i = 0; i < sessionsq; i++)
     {
-        for (int j = 0; j < sessions[i].disq && count > 0; j++, count--) mkarr[count] = sessions[i].alldisc[j].mark;
+        for (int j = 0; j < sessions[i].disq && count > 0; j++, count--) 
+            if (!CheckName(sessions[i].alldisc[j].mark))
+            {
+                if (stoi((sessions[i].alldisc[j].mark)) <= 5 || stoi((sessions[i].alldisc[j].mark)) >= 2)
+                    mkarr[count] = stoi(sessions[i].alldisc[j].mark);
+            }
     }
     return mkarr;
 }

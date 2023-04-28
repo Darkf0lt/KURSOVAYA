@@ -54,7 +54,7 @@ public:
 struct disciplineinfo
 {
     char name[20];
-    int mark;
+    char mark[6];
 };
 
 class session
