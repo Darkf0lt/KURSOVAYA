@@ -156,8 +156,6 @@ void menu::FifthOption()
 	else { cout << "Такого студента нет в базе " << endl; system("pause"); system("cls"); }
 }
 
-
-
 void menu::SixthOption()
 {
 	system("cls");
