@@ -5,7 +5,7 @@ using namespace std;
 class Node
 {
 	student field;
-	class Node* ptr;
+	Node* ptr;
 	friend class List;
 };
 
@@ -24,5 +24,6 @@ public:
 	void Clear();        
 	Node* Next(Node*);      
 	Node* Add(student st);    
-	void Print();       
+	void Print();
+	void Print(int param);
 };

@@ -8,11 +8,11 @@ using namespace std;
 
 void menu::StartMenu()
 {
-	Decrypt();
-	system("cls");
+	//Decrypt();
 	int flag = 1;
 	while (flag)
 	{
+		system("cls");
 		short int input;
 		while (true)
 		{
@@ -70,7 +70,7 @@ void menu::StartMenu()
 		case 7: flag = 0;  cout << "Завершение работы" << endl; system("cls"); break;
 		}
 	}
-	Crypt();
+	//Crypt();
 	remove("buf.bin");
 	system("cls");
 }
@@ -156,80 +156,91 @@ void menu::FifthOption()
 	else { cout << "Такого студента нет в базе " << endl; system("pause"); system("cls"); }
 }
 
-bool LookForArr(int k, int* arr, int start)
-{
-	for (int i = start; i < sizeof(arr); i++)
-	{
-		if (k == arr[i]) return true;
-	}
-	return false;
-}
+
 
 void menu::SixthOption()
 {
 	system("cls");
-	List StudentList;
+	List StudentList1;
 	ifstream file;
-	student tmpst;
-	int option;
-	int* tmparr;
-	cout << "По каким параметрам требуется вывести студента:" << endl;
-	cout << "1. За все время обучения нет ни одной оценки 3" << endl;
-	cout << "2. За все время обучения нет ни одной оценки 3 и 4" << endl;
-	cout << "3. За все время обучения нет ни одной оценки 5" << endl;
-	cout << "Ваш выбор: ";
-	cin >> option;
 	file.open("db.bin", ios::binary);
-	switch (option)
+	student tmpst;
+	int option1, option2;
+	int* tmparr;
+	bool flag = true;
+	while (flag)
 	{
-	case 1:
-	{
-		while (tmpst.ExtractFile(file))
+		cout << "По каким параметрам требуется вывести студента:" << endl;
+		cout << "1. За все время обучения нет ни одной оценки 3" << endl;
+		cout << "2. За все время обучения нет ни одной оценки 3 и 4" << endl;
+		cout << "3. За все время обучения нет ни одной оценки 5" << endl;
+		cout << "4. Выход" << endl;
+		cout << "Ваш выбор: ";
+		cin >> option2;
+		if (cin.fail())
 		{
-			tmparr = (int*) new int[tmpst.GetMarks()[0]];
-			tmparr = tmpst.GetMarks();
-			if (!LookForArr(3, tmparr, 1))
-			{
-				StudentList.Add(tmpst);
-			}
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			system("cls");
+			cout << "Вы ввели некорректную информацию" << endl;
 		}
-		StudentList.Print();
-		system("pause");
-		system("cls");
-		break;
-	}
-
-	case 2:
-	{
-		while (tmpst.ExtractFile(file))
+		else if (option2 > 0 && option2 < 5)
 		{
-			tmparr = tmpst.GetMarks();
-			if (!LookForArr(4, tmparr, 1) && !LookForArr(3, tmparr, 1))
-			{
-				StudentList.Add(tmpst);
-			}
+			flag = false;
 		}
-		StudentList.Print();
-		system("pause");
-		system("cls");
-		break;
 	}
-	case 3:
+	system("cls");
+	flag = true;
+	while (flag)
 	{
-		while (tmpst.ExtractFile(file))
+		cout << "Желаете сделать выборку по полу студентов? (1 - М/2 - Ж/3 - Не желаю): ";
+		cin >> option1;
+		if (cin.fail())
 		{
-			tmpst.ExtractFile(file);
-			tmparr = tmpst.GetMarks();
-			if (!LookForArr(5, tmparr, 1))
-			{
-				StudentList.Add(tmpst);
-			}
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			system("cls");
+			cout << "Вы ввели некорректную информацию" << endl;
 		}
-		StudentList.Print();
-		system("pause");
-		system("cls");
-		break;
+		else if (option1 > 0 && option1 < 4)
+		{
+			flag = false;
+		}
 	}
+	flag = true;
+	switch (option1)
+	{
+		case 1:
+		{
+			while (tmpst.ExtractFile(file))
+			{
+				if (tmpst.ReturnGender() == 'М') StudentList1.Add(tmpst);
+			}
+			break;
+		}
+		case 2:
+		{
+			while (tmpst.ExtractFile(file))
+			{
+				if (tmpst.ReturnGender() == 'Ж') StudentList1.Add(tmpst);
+			}
+			break;
+		}
+		case 3:
+		{
+			while (tmpst.ExtractFile(file)) StudentList1.Add(tmpst);
+			break;
+		}
+		case 4:
+		{
+			flag = false;
+			break;
+		}
 	}
-	StudentList.Clear();
+	if (flag)
+	{
+		StudentList1.Print(option2);
+	}
+	else system("cls");		
+	StudentList1.Clear();
 }

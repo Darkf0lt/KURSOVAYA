@@ -49,6 +49,10 @@ public:
     {
         return ID;
     }
+    char ReturnGender()
+    {
+        return gender;
+    }
 };
 
 struct disciplineinfo
