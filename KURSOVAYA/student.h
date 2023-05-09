@@ -64,7 +64,7 @@ struct disciplineinfo
 class session
 {
 public:
-    int disq;//disciplines quantity
+    int disq;
     disciplineinfo* alldisc;
     void GetDisc();
 };

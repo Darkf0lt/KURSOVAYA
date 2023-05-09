@@ -11,17 +11,17 @@ void Decrypt();
 void Crypt()
 {
 	srand(time(NULL));
-	char* pass = new char[64];
-	for (int i = 0; i < 64; ++i) {
+	string pass;
+	for (int i = 0; i < 63; ++i) {
 		switch (rand() % 3) {
 		case 0:
-			pass[i] = rand() % 10 + '0';
+			pass += rand() % 10 + '0';
 			break;
 		case 1:
-			pass[i] = rand() % 26 + 'A';
+			pass += rand() % 26 + 'A';
 			break;
 		case 2:
-			pass[i] = rand() % 26 + 'a';
+			pass += rand() % 26 + 'a';
 		}
 	}
 	string command = "openssl\\bin\\openssl.exe enc -aes-256-cbc -salt -in db.bin -out db.bin.enc -pass pass:";
@@ -31,36 +31,37 @@ void Crypt()
 		cout << "[ERROR] - deleting file" << endl;
 	}
 	ofstream file;
-	file.open("key.txt", ios::binary | ios::app);
-	file.write(pass, 65);
+	file.open("key.bin", ios::binary);
+	file << pass;
 	file.close();
-	command = "openssl\\bin\\openssl.exe rsautl -encrypt -pubin -inkey rsa.public -in	key.txt -out key.enc";
+	command = "openssl\\bin\\openssl.exe rsautl -encrypt -pubin -inkey rsa.public -in	key.bin -out key.enc";
 	system(command.c_str());
-	if (remove("key.txt") != 0) {
+	if (remove("key.bin") != 0) 
+	{
 		cout << "[ERROR] - deleting file" << endl;
 	}
 }
 
-
 void Decrypt()
 {
-	string command = "openssl\\bin\\openssl.exe rsautl -decrypt -inkey rsa.private -in key.enc -out key.txt";
+	string command = "openssl\\bin\\openssl.exe rsautl -decrypt -inkey rsa.private -in key.enc -out key.bin";
 	system(command.c_str());
 	if (remove("key.enc") != 0) {
 		cout << "[ERROR] - deleting file" << endl;
 	}
-	char* pass = new char[64];
+	string pass;
 	ifstream file;
-	file.open("key.txt", ios::binary);
-	file.read(pass, 65);
+	file.open("key.bin", ios::binary);
+	file >> pass;
 	file.close();
-	if (remove("key.txt") != 0) {
+	if (remove("key.bin") != 0) {
 		cout << "[ERROR] - deleting file" << endl;
 	}
 	command = "openssl\\bin\\openssl.exe enc -aes-256-cbc -d -in db.bin.enc -out db.bin -pass pass:";
 	command += pass;
 	system(command.c_str());
-	if (remove("db.bin.enc") != 0) {
+	if (remove("db.bin.enc") != 0) 
+	{
 		cout << "[ERROR] - deleting file" << endl;
 	}
 }

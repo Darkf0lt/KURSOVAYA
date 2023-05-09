@@ -8,7 +8,8 @@ using namespace std;
 
 void menu::StartMenu()
 {
-	//Decrypt();
+	Decrypt();
+	system("pause");
 	int flag = 1;
 	while (flag)
 	{
@@ -70,7 +71,8 @@ void menu::StartMenu()
 		case 7: flag = 0;  cout << "Завершение работы" << endl; system("cls"); break;
 		}
 	}
-	//Crypt();
+	Crypt();
+	system("pause");
 	remove("buf.bin");
 	system("cls");
 }
