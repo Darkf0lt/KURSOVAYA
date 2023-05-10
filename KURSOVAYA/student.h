@@ -55,8 +55,9 @@ public:
     }
 };
 
-struct disciplineinfo
+class disciplineinfo
 {
+public:
     char name[20];
     char mark[6];
 };
@@ -75,15 +76,15 @@ class student :public FIO, protected BDate, public INFO
     session* sessions;
 public:
     bool GetInfo();
-    void PrintInfo();
     void PrintSessions();
+    void PrintInfo();
     void WriteDown();
     void WriteDown(const char _filename[]);
     bool ExtractFile(ifstream &file);
     void ChangeInfo();
     bool Check();
-    static int PrintAll(const char _filename[]);
+    static bool PrintAll(const char _filename[]);
     static student FindStudent(char ID[8], const char _filename[]);
-    static int CopyFile(const char _file1[], const char _file2[]);
+    static bool CopyFile(const char _file1[], const char _file2[]);
     int* GetMarks();
 };

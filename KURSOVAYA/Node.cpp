@@ -6,7 +6,7 @@ Node* List::Add(student st)
     Node* elem = new Node();
     elem->field = st;
     count++;
-    if (node == NULL) // Добавление нового корня
+    if (node == NULL) 
     {
         if (head == NULL) {
             elem->ptr = NULL;
@@ -18,7 +18,7 @@ Node* List::Add(student st)
         }
         return elem;
     }
-    elem->ptr = node->ptr; // Добавление узла после текущего
+    elem->ptr = node->ptr; 
     node->ptr = elem;
     return elem;
 }
@@ -111,7 +111,6 @@ void List::Print(int param)
             }
             p = Next(p);
         };
-        //cout << endl;
     }
     else
     {

@@ -119,13 +119,7 @@ void INFO::GetINFO()
     }
 }
 
-void student::PrintInfo()
-{
-    cout << surename << " " << name << " " << lastname << " " <<
-        day << "." << month << "." << year << " " << yearofentery << " " <<
-        fac << " " << kaf << " " << group << " " << ID << " " << gender << " " << endl;
-    student::PrintSessions();
-}
+
 
 void FIO::PrintFIO()
 {
@@ -196,18 +190,6 @@ void session::GetDisc()
     }
 }
 
-void student::PrintSessions()
-{
-    for (int i = 0; i < sessionsq; i++)
-    {
-        cout << "Сессия " << i + 1 << ": " << endl;
-        for (int j = 0; j < sessions[i].disq; j++)
-        {
-            cout << "Предмет: " << sessions[i].alldisc[j].name << " Оценка: " << sessions[i].alldisc[j].mark << endl;
-        }
-    }
-}
-
 bool student::GetInfo()
 {
     bool flag1 = true;
@@ -273,6 +255,26 @@ bool student::GetInfo()
         system("cls");
         return true;
     }
+}
+
+void student::PrintSessions()
+{
+    for (int i = 0; i < sessionsq; i++)
+    {
+        cout << "Сессия " << i + 1 << ": " << endl;
+        for (int j = 0; j < sessions[i].disq; j++)
+        {
+            cout << "Предмет: " << sessions[i].alldisc[j].name << " Оценка: " << sessions[i].alldisc[j].mark << endl;
+        }
+    }
+}
+
+void student::PrintInfo()
+{
+    cout << surename << " " << name << " " << lastname << " " <<
+        day << "." << month << "." << year << " " << yearofentery << " " <<
+        fac << " " << kaf << " " << group << " " << ID << " " << gender << " " << endl;
+    student::PrintSessions();
 }
 
 void student::WriteDown()
@@ -518,7 +520,7 @@ bool student::Check()
     else return true;
 }
 
-int student::PrintAll(const char _filename[])
+bool student::PrintAll(const char _filename[])
 {
     student tmpst;
     ifstream file;
@@ -531,7 +533,7 @@ int student::PrintAll(const char _filename[])
     cout << "|----------------------------------------------------------------------------------------------|" << endl;
     system("pause");
     system("cls");
-    return 1;
+    return true;
 }
 
 student student::FindStudent(char ID[8], const char _filename[])
@@ -551,7 +553,7 @@ student student::FindStudent(char ID[8], const char _filename[])
     return res;
 }
 
-int student::CopyFile(const char _file1[], const char _file2[])
+bool student::CopyFile(const char _file1[], const char _file2[])
 {
     ifstream file;
     student tmpst;
@@ -563,7 +565,7 @@ int student::CopyFile(const char _file1[], const char _file2[])
     {
         tmpst.WriteDown(_file2);
     }
-    return 1;
+    return true;
 }
 
 int* student::GetMarks()
