@@ -29,16 +29,6 @@ Node* List::Next(Node* node)
     return node->ptr;
 }
 
-Node* List::Prev(Node* node)
-{
-    if (isEmpty()) return NULL;
-    if (node == head) return NULL;
-    Node* p = head;
-    while (p->ptr != node)
-        p = p->ptr;
-    return p;
-}
-
 
 void List::Clear()
 {
@@ -80,7 +70,7 @@ void List::Print(int param)
     if (isEmpty()) { cout << "Таких студентов не существует" << endl; system("pause"); return; }
     Node* p = head;
     bool marks2 = false, printed = false;
-    int mark1, mark2;
+    int mark1=0, mark2 = 0;
     switch (param)
     {
     case 1:

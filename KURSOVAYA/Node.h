@@ -13,15 +13,13 @@ class List
 {
 	Node* head;   
 	int count = 0; 
-	Node* Prev(Node*); 
 public:
+	Node* Next(Node*);
 	List() { head = NULL; } 
 	bool isEmpty() { return head == NULL; }  
 	student getValue(Node* p) { return p->field; } 
 	void setValue(Node* p, student val) { p->field = val; } 
-	Node* getFirst() { return head; } 
-	void Clear();        
-	Node* Next(Node*);      
+	void Clear();         
 	Node* Add(student st);    
 	void Print();
 	void Print(int param);
