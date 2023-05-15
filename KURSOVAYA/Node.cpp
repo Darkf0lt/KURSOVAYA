@@ -5,7 +5,6 @@ Node* List::Add(student st)
     Node* node = NULL;
     Node* elem = new Node();
     elem->field = st;
-    count++;
     if (node == NULL) 
     {
         if (head == NULL) {
@@ -50,7 +49,6 @@ void List::Clear()
         p = Next(p);
         delete d;
     } while (p != NULL);
-    count = 0;
     head = NULL;
 }
 

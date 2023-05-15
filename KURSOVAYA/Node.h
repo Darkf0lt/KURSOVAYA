@@ -16,7 +16,6 @@ class List
 	Node* Prev(Node*); 
 public:
 	List() { head = NULL; } 
-	int getCount() { return count; } 
 	bool isEmpty() { return head == NULL; }  
 	student getValue(Node* p) { return p->field; } 
 	void setValue(Node* p, student val) { p->field = val; } 
