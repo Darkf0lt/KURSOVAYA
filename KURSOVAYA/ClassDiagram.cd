@@ -1,2 +1,82 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FIO">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAgAAAQAAAACAAAAAAAEAAAAAAAAACAAAAA=</HashCode>
+      <FileName>student.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BDate">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAkAIAAAAEAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>student.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="INFO">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QACIAAQAAAgAgAAAAABAggAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>student.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="disciplineinfo">
+    <Position X="7.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>student.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="session">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>student.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="student">
+    <Position X="4.25" Y="4.25" Width="1.5" />
+    <InheritanceLine Type="FIO">
+      <InheritanceModifierLabel ManuallyPlaced="true">
+        <Position X="-1.839" Y="3.534" />
+      </InheritanceModifierLabel>
+    </InheritanceLine>
+    <InheritanceLine Type="BDate">
+      <InheritanceModifierLabel ManuallyPlaced="true">
+        <Position X="-0.375" Y="3.51" />
+      </InheritanceModifierLabel>
+    </InheritanceLine>
+    <InheritanceLine Type="INFO">
+      <InheritanceModifierLabel ManuallyPlaced="true">
+        <Position X="1.763" Y="3.534" />
+      </InheritanceModifierLabel>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>BAAAAAgAAACAIABABEAAAAEAAAAAAEBAAAAAiAAAAAA=</HashCode>
+      <FileName>student.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Node">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Node.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="List">
+    <Position X="9.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgIAAAAAgAAAACAABAIAAAAAAAAAAAAAAAAAAABEQAI=</HashCode>
+      <FileName>Node.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="menu">
+    <Position X="11.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EBAAQgAAAAAAAAAAAAAACAAAAAAAAAABAAAIAAAAAAA=</HashCode>
+      <FileName>menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
