@@ -53,7 +53,7 @@ void BDate::GetDate()
         cin >> day >> month >> year;
         if (!cin.fail())
         {
-            if (!(month > 12 || month < 1 || day>31 || day < 1))//”Ћ”„Ў»“№
+            if (!(month > 12 || month < 1 || day>31 || day < 1 || year>2008 || year<1970))
             {
 
                 break;
@@ -75,7 +75,7 @@ void INFO::GetINFO()
     {
         cout << "¬ведите год поступлени€: ";
         cin >> yearofentery;
-        if (!cin.fail())
+        if (!(cin.fail() || yearofentery > 2023))
         {
 
             break;
@@ -118,8 +118,6 @@ void INFO::GetINFO()
         else cout << "ѕроверьте корректность введЄнных данных и введите их заново " << endl;
     }
 }
-
-
 
 void FIO::PrintFIO()
 {

@@ -9,7 +9,6 @@ using namespace std;
 void menu::StartMenu()
 {
 	Decrypt();
-	system("pause");
 	int flag = 1;
 	while (flag)
 	{
@@ -72,7 +71,6 @@ void menu::StartMenu()
 		}
 	}
 	Crypt();
-	system("pause");
 	remove("buf.bin");
 	system("cls");
 }
